@@ -1,0 +1,6 @@
+postgres_host: localhost
+postgres_port: 5432
+postgres_user: api_relay_back
+postgres_database: api_relay_back
+
+

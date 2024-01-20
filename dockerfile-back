@@ -1,0 +1,12 @@
+FROM python:3.8.15-bullseye
+
+RUN pip3 install --upgrade pip
+RUN mkdir -p /srv
+COPY backend/requirements.txt /srv/requirements.txt
+WORKDIR /srv
+RUN pip3 install -r requirements.txt
+COPY backend /srv/application/backend
+WORKDIR /srv/application/backend
+ENV PYTHONIOENCODING=utf8
+ENV PYTHONPATH=/srv/application
+CMD ["uwsgi","/srv/application/backend/uwsgi.ini"]
