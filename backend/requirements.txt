@@ -8,7 +8,7 @@ psycopg2-binary==2.9.9
 python-dateutil==2.8.2
 pyyaml==6.0
 requests==2.27.1
-#uWSGI==2.0.20
+uWSGI==2.0.20
 wheel==0.37.1
 flask-marshmallow==0.15.0
 alembic==1.11.1

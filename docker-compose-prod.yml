@@ -1,8 +1,14 @@
 version: '3.6'
 
+networks:
+  web:
+    external: true
+  internal:
+    external: false
+
 services:
-  api_relay_back_postgres_db:
-    container_name: api_relay_back_postgres_db
+  esp_relay_back_postgres_db:
+    container_name: esp_relay_back_postgres_db
     image: postgres:14.5
     restart: always
     environment:
@@ -10,33 +16,48 @@ services:
       POSTGRES_USER: vi_debt_back
       POSTGRES_DB: vi_debt_back
     volumes:
-      - api_relay_back_volume_postgres_db:/var/lib/postgresql/data
+      - esp_relay_back_volume_postgres_db:/var/lib/postgresql/data
     ports:
       - 5432:5432
+    networks:
+      - internal
 
 
-  api_relay_back_bot_adminer:
-    container_name: api_relay_back_bot_adminer
+  esp_relay_back_bot_adminer:
+    container_name: esp_relay_back_bot_adminer
     image: adminer:4.8.1
     restart: always
     ports:
       - 8890:8080
     environment:
-      ADMINER_DEFAULT_SERVER: api_relay_back_postgres_db
+      ADMINER_DEFAULT_SERVER: esp_relay_back_postgres_db
+    networks:
+      - web
+      - internal
 
 
-  api_relay_back_app:
-    container_name: api_relay_back_app
-    image: api_relay_back_backend:latest
+
+  esp_relay_back_app:
+    container_name: esp_relay_back_app
+    image: esp_relay_back_backend:latest
     restart: always
     depends_on:
-      - api_relay_back_postgres_db
+      - esp_relay_back_postgres_db
     environment:
       CONFIG: master
       SECRET_KEY:
       POSTGRES_PASSWORD:
-    ports:
-      - 83:80
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.sh-relay_neztech_ru.entrypoints=https"
+      - "traefik.docker.network=web"
+      - "traefik.port=80"
+      - "traefik.http.routers.relay_neztech_ru.tls=true"
+      - "traefik.http.routers.relay_neztech_ru.tls.certresolver=letsEncrypt"
+      - "traefik.http.routers.relay_neztech_ru.rule=Host(`sh-relay.neztech.ru`)"
+    networks:
+      - web
+      - internal
 
 volumes:
-  api_relay_back_volume_postgres_db:
+  esp_relay_back_volume_postgres_db:
