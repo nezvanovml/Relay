@@ -59,6 +59,6 @@ def api_server_put(unique_id, token):
     return make_response(jsonify({'errors': None, 'data': {}}), 200)
     
 
-@api.route('/firmware.bin', methods=["GET"])
-def api_firmware_get():
-    return send_file("files/firmware.bin", as_attachment=False)
+# @api.route('/firmware.bin', methods=["GET"])
+# def api_firmware_get():
+#     return send_file("files/firmware.bin", as_attachment=False)
