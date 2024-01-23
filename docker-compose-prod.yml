@@ -52,9 +52,9 @@ services:
       - "traefik.http.routers.sh-relay_neztech_ru.entrypoints=https"
       - "traefik.docker.network=web"
       - "traefik.port=80"
-      - "traefik.http.routers.relay_neztech_ru.tls=true"
-      - "traefik.http.routers.relay_neztech_ru.tls.certresolver=letsEncrypt"
-      - "traefik.http.routers.relay_neztech_ru.rule=Host(`sh-relay.neztech.ru`)"
+      - "traefik.http.routers.sh-relay_neztech_ru.tls=true"
+      - "traefik.http.routers.sh-relay_neztech_ru.tls.certresolver=letsEncrypt"
+      - "traefik.http.routers.sh-relay_neztech_ru.rule=Host(`sh-relay.neztech.ru`)"
     networks:
       - web
       - internal
