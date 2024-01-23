@@ -1,4 +1,4 @@
-postgres_host: api_relay_back_postgres_db
+postgres_host: esp_relay_back_postgres_db
 postgres_port: 5432
-postgres_user: api_relay_back
-postgres_database: api_relay_back
+postgres_user: esp_relay_back
+postgres_database: esp_relay_back

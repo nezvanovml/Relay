@@ -13,8 +13,8 @@ services:
     restart: always
     environment:
       POSTGRES_PASSWORD:
-      POSTGRES_USER: vi_debt_back
-      POSTGRES_DB: vi_debt_back
+      POSTGRES_USER: esp_relay_back
+      POSTGRES_DB: esp_relay_back
     volumes:
       - esp_relay_back_volume_postgres_db:/var/lib/postgresql/data
     ports:
