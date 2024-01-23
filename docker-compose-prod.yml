@@ -49,12 +49,12 @@ services:
       POSTGRES_PASSWORD:
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.sh-relay_neztech_ru.entrypoints=https"
+      - "traefik.http.routers.esp_relay.entrypoints=https"
       - "traefik.docker.network=web"
       - "traefik.port=80"
-      - "traefik.http.routers.sh-relay_neztech_ru.tls=true"
-      - "traefik.http.routers.sh-relay_neztech_ru.tls.certresolver=letsEncrypt"
-      - "traefik.http.routers.sh-relay_neztech_ru.rule=Host(`sh-relay.neztech.ru`)"
+      - "traefik.http.routers.esp_relay.tls=true"
+      - "traefik.http.routers.esp_relay.tls.certresolver=letsEncrypt"
+      - "traefik.http.routers.esp_relay.rule=Host(`sh-relay.neztech.ru`)"
     networks:
       - web
       - internal
