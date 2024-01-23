@@ -23,7 +23,7 @@ services:
       - internal
 
 
-  esp_relay_back_bot_adminer:
+  esp_relay_back_adminer:
     container_name: esp_relay_back_bot_adminer
     image: adminer:4.8.1
     restart: always
