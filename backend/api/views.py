@@ -40,7 +40,7 @@ def api_device_put(unique_id, token):
         print(message.id)
         Messages.query.filter(Messages.device_id == device.id, Messages.from_device == False, Messages.date <= message.date).delete()
         commit()
-    firmware = Firmwares.query.filter(device_id == device.id).order_by(Firmwares.version.desc()).first()
+    firmware = Firmwares.query.filter(Firmwares.device_id == device.id).order_by(Firmwares.version.desc()).first()
     if firmware:
         response['firmware']['version'] = firmware.version
     return make_response(jsonify(response), 200)
@@ -98,7 +98,7 @@ def api_firmware_put(unique_id, token):
         
         return make_response(jsonify({'errors': None, 'data': {}}), 200)
     elif request.method == 'GET':
-        firmware = Firmwares.query.filter(device_id == device.id).order_by(Firmwares.version.desc()).first()
+        firmware = Firmwares.query.filter(Firmwares.device_id == device.id).order_by(Firmwares.version.desc()).first()
         if not firmware:
             return make_response(jsonify({'errors': ['Firmware for device not found.'], 'data': None}), 404)
         else:
