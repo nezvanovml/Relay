@@ -23,7 +23,6 @@ api = Blueprint('api', __name__)
 
 @api.route('/device/<string:unique_id>/<string:token>', methods=["PUT"])
 def api_device_put(unique_id, token):
-    print(request.get_json(force=True))
     device = Devices.query.filter(Devices.unique_id == unique_id).first()
     if not device:
         device = Devices(unique_id=unique_id, token=token, last_connection=datetime.datetime.utcnow())
@@ -33,6 +32,12 @@ def api_device_put(unique_id, token):
         return make_response('Incorrect token.', 401)
     device.last_connection = datetime.datetime.utcnow()
     commit()
+    try:
+        json_data = request.get_json(force=True)
+    except Exception as err:
+        return make_response(jsonify({'errors': ['Incorrect JSON.'], 'data': None}), 400)
+    print(json)
+
     response = {'message': None, 'firmware': None}
     message = Messages.query.filter(Messages.device_id == device.id, Messages.from_device == False).order_by(Messages.date.desc()).first()
     if message:
@@ -54,11 +59,11 @@ def api_server_put(unique_id, token):
     elif device.token != token:
         return make_response(jsonify({'errors': ['Incorrect token.'], 'data': None}), 401)
     try:
-        json = request.get_json()
+        json_data = request.get_json(force=True)
     except Exception as err:
         return make_response(jsonify({'errors': ['Incorrect JSON.'], 'data': None}), 400)
     print(json)
-    message = Messages(from_device=False, device_id=device.id, date=datetime.datetime.utcnow(), json=json)
+    message = Messages(from_device=False, device_id=device.id, date=datetime.datetime.utcnow(), json=json_data)
     if not add_and_commit(message):
         return make_response(jsonify({'errors': ['Unable to add message.'], 'data': None}), 500)
     return make_response(jsonify({'errors': None, 'data': {}}), 200)
