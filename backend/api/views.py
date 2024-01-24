@@ -99,7 +99,7 @@ def api_firmware_put(unique_id, token):
             id = uuid.uuid4()
             filename = f'{str(id)}.bin' 
             file.save(os.path.join(app.config['config']['firmware_root'], filename))
-            firmware = Firmwares(id=id, version=1, device_id=device.id, date=datetime.datetime.utcnow())
+            firmware = Firmwares(id=id, version=version, device_id=device.id, date=datetime.datetime.utcnow())
             if not add_and_commit(firmware):
                 return make_response(jsonify({'errors': ['Unable to add firmware.'], 'data': None}), 500)
             return make_response(jsonify({'errors': None, 'data': {}}), 201)
