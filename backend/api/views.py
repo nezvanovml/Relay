@@ -36,7 +36,7 @@ def api_device_put(unique_id, token):
         json_data = request.get_json(force=True)
     except Exception as err:
         return make_response(jsonify({'errors': ['Incorrect JSON.'], 'data': None}), 400)
-    print(json)
+    print(json_data)
 
     response = {'message': None, 'firmware': None}
     message = Messages.query.filter(Messages.device_id == device.id, Messages.from_device == False).order_by(Messages.date.desc()).first()
@@ -62,7 +62,7 @@ def api_server_put(unique_id, token):
         json_data = request.get_json(force=True)
     except Exception as err:
         return make_response(jsonify({'errors': ['Incorrect JSON.'], 'data': None}), 400)
-    print(json)
+    print(json_data)
     message = Messages(from_device=False, device_id=device.id, date=datetime.datetime.utcnow(), json=json_data)
     if not add_and_commit(message):
         return make_response(jsonify({'errors': ['Unable to add message.'], 'data': None}), 500)
@@ -107,7 +107,7 @@ def api_firmware_put(unique_id, token):
         if not firmware:
             return make_response(jsonify({'errors': ['Firmware for device not found.'], 'data': None}), 404)
         else:
-            path = os.path.join(app.config['config']['firmware_root'], str(firmware.id))
+            path = os.path.join(app.config['config']['firmware_root'], f'{str(firmware.id)}.bin')
             return send_file(path, as_attachment=False)
 
 # @api.route('/firmware.bin', methods=["GET"])
