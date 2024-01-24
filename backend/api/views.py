@@ -91,6 +91,10 @@ def api_firmware_put(unique_id, token):
             version = int(version)
         except Exception:
             return make_response(jsonify({'errors': ['version is not of type integer.'], 'data': None}), 400)
+        # Проверяем чтобы версия была больше чем ранее загруженная
+        firmware = Firmwares.query.filter(Firmwares.device_id==device.id, Firmwares.version >= version).first()
+        if firmware:
+            return make_response(jsonify({'errors': [f'provide incremented version of firmware.'], 'data': None}), 400)
         if file and allowed_file(file.filename):
             id = uuid.uuid4()
             filename = f'{str(id)}.bin' 
