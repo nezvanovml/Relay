@@ -12,7 +12,9 @@ from backend.extensions import db
 from backend.utils import format_datetime, format_date, parse_date, leave_keys, delete_keys, commit, add_and_commit, \
     delete_and_commit
 from sqlalchemy import or_, and_, union_all, union, select, literal_column, column, literal, text, desc, not_
-from .models import Devices, Messages
+from .models import Devices, Messages, Firmwares
+import uuid
+from .utils import allowed_file
 
 api = Blueprint('api', __name__)
 
@@ -58,6 +60,47 @@ def api_server_put(unique_id, token):
         return make_response(jsonify({'errors': ['Unable to add message.'], 'data': None}), 500)
     return make_response(jsonify({'errors': None, 'data': {}}), 200)
     
+
+@api.route('/firmware/<string:unique_id>/<string:token>', methods=["POST", "GET"])
+def api_firmware_put(unique_id, token):
+    device = Devices.query.filter(Devices.unique_id == unique_id).first()
+    if not device:
+        return make_response(jsonify({'errors': ['Device not found.'], 'data': None}), 404)
+    elif device.token != token:
+        return make_response(jsonify({'errors': ['Incorrect token.'], 'data': None}), 401)
+    if request.method == 'POST':
+        UPLOAD_FOLDER = app.config.get('firmware_root')
+        
+
+        if 'file' not in request.files:
+            return make_response(jsonify({'errors': ['File not provided.'], 'data': None}), 400)
+        file = request.files['file']
+        if file.filename == '':
+            return make_response(jsonify({'errors': ['File not provided.'], 'data': None}), 400)
+        
+        version = request.form.get('version', None)
+        try:
+            version = int(version)
+        except Exception:
+            return make_response(jsonify({'errors': ['version is not of type integer.'], 'data': None}), 400)
+        if file and allowed_file(file.filename):
+            id = uuid.uuid4()
+            filename = f'{str(id)}.bin' 
+            file.save(os.path.join(app.config['config']['firmware_root'], filename))
+            firmware = Firmwares(id=id, version=1, device_id=device.id, date=datetime.datetime.utcnow())
+            if not add_and_commit(firmware):
+                return make_response(jsonify({'errors': ['Unable to add firmware.'], 'data': None}), 500)
+            return make_response(jsonify({'errors': None, 'data': {}}), 201)
+        
+        
+        return make_response(jsonify({'errors': None, 'data': {}}), 200)
+    elif request.method == 'GET':
+        firmware = Firmwares.query.filter(device_id == device.id).order_by(Firmwares.version.desc()).first()
+        if not firmware:
+            return make_response(jsonify({'errors': ['Firmware for device not found.'], 'data': None}), 404)
+        else:
+            path = os.path.join(app.config['config']['firmware_root'], firmware.id)
+            return send_file(path, as_attachment=False)
 
 # @api.route('/firmware.bin', methods=["GET"])
 # def api_firmware_get():

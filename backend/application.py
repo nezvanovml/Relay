@@ -43,6 +43,7 @@ def create_app(config='master'):
     app.logger.info(f"Loading setting from: {config}")
     config = get_config(config)
     app.config['config'] = config
+    
 
     # here must be imported all models
     import backend.api.models
