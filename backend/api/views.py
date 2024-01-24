@@ -47,7 +47,7 @@ def api_device_put(unique_id, token):
         commit()
     firmware = Firmwares.query.filter(Firmwares.device_id == device.id).order_by(Firmwares.version.desc()).first()
     if firmware:
-        response['firmware']['version'] = firmware.version
+        response['firmware'] = {'version': firmware.version}
     return make_response(jsonify(response), 200)
     
 
@@ -107,7 +107,7 @@ def api_firmware_put(unique_id, token):
         if not firmware:
             return make_response(jsonify({'errors': ['Firmware for device not found.'], 'data': None}), 404)
         else:
-            path = os.path.join(app.config['config']['firmware_root'], firmware.id)
+            path = os.path.join(app.config['config']['firmware_root'], str(firmware.id))
             return send_file(path, as_attachment=False)
 
 # @api.route('/firmware.bin', methods=["GET"])
