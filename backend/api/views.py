@@ -101,7 +101,7 @@ def api_firmware_put(unique_id, token):
             return make_response(jsonify({'errors': None, 'data': {}}), 201)
         
         
-        return make_response(jsonify({'errors': None, 'data': {}}), 200)
+        return make_response(jsonify({'errors': ['File extension must be .bin .'], 'data': None}), 400)
     elif request.method == 'GET':
         firmware = Firmwares.query.filter(Firmwares.device_id == device.id).order_by(Firmwares.version.desc()).first()
         if not firmware:
