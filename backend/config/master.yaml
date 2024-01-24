@@ -2,3 +2,4 @@ postgres_host: esp_relay_back_postgres_db
 postgres_port: 5432
 postgres_user: esp_relay_back
 postgres_database: esp_relay_back
+firmware_root: /srv/firmwares

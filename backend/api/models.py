@@ -29,5 +29,19 @@ class Messages(db.Model):
         return 'Messages %r' % self.id
     
 
+class Firmwares(db.Model):
+    __tablename__ = 'api_firmwares'
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    version = db.Column(db.Integer, nullable=False)  # количество дней просрочки
+    device_id = db.Column(db.Integer, db.ForeignKey('api_devices.id', ondelete='CASCADE'), nullable=False)
+    device = db.relationship('Devices')
+    date = db.Column(db.DateTime, default=datetime.datetime.utcnow(), nullable=False)
+    num_of_downloads = db.Column(db.Integer, default=0)
+
+    def __repr__(self):
+        return 'Firmwares %r' % self.id
+    
+    
+
 
 

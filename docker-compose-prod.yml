@@ -47,6 +47,8 @@ services:
       CONFIG: master
       SECRET_KEY:
       POSTGRES_PASSWORD:
+    volumes:
+      - esp_relay_back_volume_firmwares:/srv/firmwares
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.esp_relay.entrypoints=https"
@@ -61,3 +63,4 @@ services:
 
 volumes:
   esp_relay_back_volume_postgres_db:
+  esp_relay_back_volume_firmwares:
