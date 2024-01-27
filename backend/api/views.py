@@ -111,9 +111,7 @@ def api_firmware_put(unique_id, token):
         if not firmware:
             return make_response(jsonify({'errors': ['Firmware for device not found.'], 'data': None}), 404)
         else:
+            firmware.num_of_downloads += 1
+            commit()
             path = os.path.join(app.config['config']['firmware_root'], f'{str(firmware.id)}.bin')
             return send_file(path, as_attachment=False)
-
-# @api.route('/firmware.bin', methods=["GET"])
-# def api_firmware_get():
-#     return send_file("files/firmware.bin", as_attachment=False)

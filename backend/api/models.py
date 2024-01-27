@@ -11,6 +11,7 @@ class Devices(db.Model):
     unique_id = db.Column(db.String(50), unique=True)
     token = db.Column(db.String(50), nullable=False)
     last_connection = db.Column(db.DateTime, default=datetime.datetime.utcnow(), nullable=False)
+    version = db.Column(db.Integer, nullable=True)  
 
     def __repr__(self):
         return 'Devices %r' % self.id
@@ -32,7 +33,7 @@ class Messages(db.Model):
 class Firmwares(db.Model):
     __tablename__ = 'api_firmwares'
     id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    version = db.Column(db.Integer, nullable=False)  # количество дней просрочки
+    version = db.Column(db.Integer, nullable=False)  
     device_id = db.Column(db.Integer, db.ForeignKey('api_devices.id', ondelete='CASCADE'), nullable=False)
     device = db.relationship('Devices')
     date = db.Column(db.DateTime, default=datetime.datetime.utcnow(), nullable=False)
