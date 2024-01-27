@@ -2,7 +2,7 @@ import os
 from flask import Flask, jsonify, make_response
 import yaml
 import backend as app_root
-from backend.extensions import db, migrate, spec
+from backend.extensions import db, migrate, spec, socket
 from logging.config import dictConfig
 from flask_swagger_ui import get_swaggerui_blueprint
 
@@ -57,6 +57,10 @@ def create_app(config='master'):
 
     # Migrate initialization
     migrate.init_app(app, db)
+
+    # socket initialization
+    app.config['SOCK_SERVER_OPTIONS'] = {'ping_interval': 25}
+    socket.init_app(app)
 
     with app.app_context():
         import backend.middleware
