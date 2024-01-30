@@ -10,4 +10,3 @@ COPY backend /srv/application/backend
 WORKDIR /srv/application/backend
 ENV PYTHONIOENCODING=utf8
 ENV PYTHONPATH=/srv/application
-CMD ["uwsgi","/srv/application/backend/uwsgi.ini"]
