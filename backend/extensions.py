@@ -4,10 +4,13 @@ import os
 from apispec import APISpec
 from apispec.ext.marshmallow import MarshmallowPlugin
 from apispec_webframeworks.flask import FlaskPlugin
+from flask_sock import Sock
+
 
 
 db = SQLAlchemy()
 migrate = Migrate()
+socket = Sock()
 
 # Create an APISpec
 spec = APISpec(
