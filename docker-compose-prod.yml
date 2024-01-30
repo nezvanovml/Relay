@@ -42,8 +42,6 @@ services:
     image: esp_relay_back_backend:latest
     restart: always
     command: gunicorn --workers 4 --threads 100 --preload -b 0.0.0.0:80 'wsgi:app'
-    ports:
-      - 80:80
     depends_on:
       - esp_relay_back_postgres_db
     environment:
