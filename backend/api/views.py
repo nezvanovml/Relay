@@ -136,7 +136,6 @@ def ws_server(ws):
                 ws.send(json.dumps({"info": "AUTHORIZED"}))
         elif device.is_authorized:
             print("SERVER", device.get_device_id(), device.is_authorized, received_data)
-            device.update_last_connection()
             _message = device.get_message_server()
             if _message:
                 ws.send(json.dumps({'mes': _message}))
