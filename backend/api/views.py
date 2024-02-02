@@ -48,28 +48,77 @@ api = Blueprint('api', __name__)
 #     return make_response(jsonify(response), 200)
     
 
-@api.route('/server/<string:unique_id>/<string:token>', methods=["PUT"])
-def api_server_put(unique_id, token):
+# @api.route('/server/<string:unique_id>/<string:token>', methods=["PUT"])
+# def api_server_put(unique_id, token):
+#     device = DeviceConnection()
+#     if not device.authorize(unique_id, token, False):
+#         return make_response(jsonify({'errors': ['Device not found.'], 'data': None}), 404)
+#     try:
+#         payload = request.get_json(force=True)
+#     except Exception as err:
+#         return make_response(jsonify({'errors': ['Incorrect JSON.'], 'data': None}), 400)
+    
+#     response = {}
+    
+
+#     if 'command' in payload: # Обрабатываем команды
+#         device.post_message_server(payload.get('command'))
+#     if 'req' in payload: # Обрабатываем запрос данных
+#         req = payload.get('req')
+#         if req == 'SYSINFO': # Запрос версии прошивки
+#             response['system_info'] = device.get_system_info()
+#     else:
+#         response['commands'] = device.get_messages_server()
+#     return make_response(jsonify({'errors': None, 'data': response}), 200)
+
+@api.route('/server/commands/<string:unique_id>/<string:token>', methods=["POST"])
+def api_server_post(unique_id, token):
     device = DeviceConnection()
     if not device.authorize(unique_id, token, False):
-        return make_response(jsonify({'errors': ['Device not found.'], 'data': None}), 404)
+        return make_response(jsonify({'errors': ['Device not found.']}), 404)
     try:
         payload = request.get_json(force=True)
     except Exception as err:
-        return make_response(jsonify({'errors': ['Incorrect JSON.'], 'data': None}), 400)
+        return make_response(jsonify({'errors': ['Incorrect JSON.']}), 400)
     
     response = {}
     
-
-    if 'mes' in payload: # Обрабатываем сообщение
-        device.post_message_server(payload.get('mes'))
-    if 'req' in payload: # Обрабатываем запрос данных
-        req = payload.get('req')
-        if req == 'SYSINFO': # Запрос версии прошивки
-            response['system_info'] = device.get_system_info()
+    if 'command' not in payload: # Обрабатываем команды
+        return make_response(jsonify({'errors': ['Incorrect JSON.']}), 400)
+    
+    if device.post_message_server(payload.get('command')):
+        return make_response(jsonify({}), 201)
     else:
-        response['mes'] = device.get_messages_server()
-    return make_response(jsonify({'errors': None, 'data': response}), 200)
+        return make_response(jsonify({'errors': ['Error adding command.']}), 500)
+
+@api.route('/server/commands/<string:unique_id>/<string:token>', methods=["GET"])
+def api_server_commands_get(unique_id, token):
+    device = DeviceConnection()
+    if not device.authorize(unique_id, token, False):
+        return make_response(jsonify({'errors': ['Device not found.'], 'data': None}), 404)
+    return make_response(jsonify([device.get_messages_server()]), 200)
+
+@api.route('/server/system_info/<string:unique_id>/<string:token>', methods=["GET"])
+def api_server_system_info_get(unique_id, token):
+    device = DeviceConnection()
+    if not device.authorize(unique_id, token, False):
+        return make_response(jsonify({'errors': ['Device not found.'], 'data': None}), 404)
+    return make_response(jsonify(device.get_system_info()), 200)
+
+@api.route('/server/status/<string:unique_id>/<string:token>', methods=["GET"])
+def api_server_status_get(unique_id, token):
+    device = DeviceConnection()
+    if not device.authorize(unique_id, token, False):
+        return make_response(jsonify({'errors': ['Device not found.'], 'data': None}), 404)
+    return make_response(jsonify(device.get_statuses_server()), 200)
+
+@api.route('/server/checkauth/<string:unique_id>/<string:token>', methods=["GET"])
+def api_server_checkauth_get(unique_id, token):
+    device = DeviceConnection()
+    if device.authorize(unique_id, token, False):
+        return make_response(jsonify({}), 200)
+    return make_response(jsonify({}), 404)
+    
     
 
 @api.route('/firmware/<string:unique_id>/<string:token>', methods=["POST", "GET"])

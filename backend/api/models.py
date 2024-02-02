@@ -11,10 +11,7 @@ class Devices(db.Model):
     unique_id = db.Column(db.String(50), unique=True)
     token = db.Column(db.String(50), nullable=False)
     last_connection = db.Column(db.DateTime, default=datetime.datetime.utcnow(), nullable=False)
-    # version = db.Column(db.Integer, nullable=True) 
-    # device_type = db.Column(db.String(50), nullable=True) 
     system_info = db.Column(JSON, nullable=True)
-    is_active = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
         return 'Devices %r' % self.id
@@ -31,6 +28,17 @@ class Messages(db.Model):
 
     def __repr__(self):
         return 'Messages %r' % self.id
+    
+class Statuses(db.Model):
+    __tablename__ = 'api_statuses'
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    json = db.Column(JSON, nullable=True)
+    device_id = db.Column(db.Integer, db.ForeignKey('api_devices.id', ondelete='CASCADE'), nullable=False)
+    device = db.relationship('Devices')
+    date = db.Column(db.DateTime, default=datetime.datetime.utcnow(), nullable=False)
+
+    def __repr__(self):
+        return 'Statuses %r' % self.id
     
 
 class Firmwares(db.Model):

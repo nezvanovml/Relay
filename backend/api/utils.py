@@ -1,6 +1,6 @@
 import datetime
 from backend.utils import commit, add_and_commit, format_date, format_datetime
-from .models import Devices, Messages, Firmwares
+from .models import Devices, Messages, Firmwares, Statuses
 ALLOWED_EXTENSIONS = ['bin']
 
 def allowed_file(filename):
@@ -72,6 +72,17 @@ class DeviceConnection:
         messages.delete()
         commit()    
         return _messages
+    
+    def get_statuses_server(self) :  
+        if not self.is_authorized:
+            raise Exception("UNAUTHORIZED REQUEST")
+        _statuses = []
+        statuses = Statuses.query.filter(Statuses.device == self.__device)
+        for status in statuses.order_by(Statuses.date).all():
+            _statuses.append({"status": status.json, "date": format_datetime(status.date)})
+        statuses.delete()
+        commit()    
+        return _statuses
     
     def post_message_device(self, message: dict) -> bool:  
         if not self.is_authorized:
