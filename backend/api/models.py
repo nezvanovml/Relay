@@ -14,6 +14,7 @@ class Devices(db.Model):
     # version = db.Column(db.Integer, nullable=True) 
     # device_type = db.Column(db.String(50), nullable=True) 
     system_info = db.Column(JSON, nullable=True)
+    is_active = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
         return 'Devices %r' % self.id

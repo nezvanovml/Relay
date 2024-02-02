@@ -1,5 +1,5 @@
 import datetime
-from backend.utils import commit, add_and_commit
+from backend.utils import commit, add_and_commit, format_date
 from .models import Devices, Messages, Firmwares
 ALLOWED_EXTENSIONS = ['bin']
 
@@ -61,6 +61,17 @@ class DeviceConnection:
             Messages.query.filter(Messages.device == self.__device, Messages.from_device == True, Messages.date <= message.date).delete()
             commit()
         return _message
+    
+    def get_messages_server(self) :  
+        if not self.is_authorized:
+            raise Exception("UNAUTHORIZED REQUEST")
+        _messages = []
+        messages = Messages.query.filter(Messages.device == self.__device, Messages.from_device == True).order_by(Messages.date).all()
+        for message in messages:
+            _messages.append({"mes": message.json, "date": format_date(message.date)})
+            message.delete()
+        commit()    
+        return _messages
     
     def post_message_device(self, message: dict) -> bool:  
         if not self.is_authorized:
