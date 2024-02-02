@@ -59,9 +59,7 @@ def api_server_put(unique_id, token):
         return make_response(jsonify({'errors': ['Incorrect JSON.'], 'data': None}), 400)
     
     response = {}
-    _messages = device.get_messages_server()
-    if _messages:
-        response['mes'] = _messages
+    
 
     if 'mes' in payload: # Обрабатываем сообщение
         device.post_message_server(payload.get('mes'))
@@ -69,6 +67,8 @@ def api_server_put(unique_id, token):
         req = payload.get('req')
         if req == 'SYSINFO': # Запрос версии прошивки
             response['system_info'] = device.get_system_info()
+    else:
+        response['mes'] = device.get_messages_server()
     return make_response(jsonify({'errors': None, 'data': response}), 200)
     
 
