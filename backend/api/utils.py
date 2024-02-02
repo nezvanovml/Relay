@@ -1,5 +1,5 @@
 import datetime
-from backend.utils import commit, add_and_commit, format_date
+from backend.utils import commit, add_and_commit, format_date, format_datetime
 from .models import Devices, Messages, Firmwares
 ALLOWED_EXTENSIONS = ['bin']
 
@@ -68,7 +68,7 @@ class DeviceConnection:
         _messages = []
         messages = Messages.query.filter(Messages.device == self.__device, Messages.from_device == True)
         for message in messages.order_by(Messages.date).all():
-            _messages.append({"mes": message.json, "date": format_date(message.date)})
+            _messages.append({"mes": message.json, "date": format_datetime(message.date)})
         messages.delete()
         commit()    
         return _messages
