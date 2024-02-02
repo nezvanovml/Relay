@@ -66,8 +66,8 @@ class DeviceConnection:
         if not self.is_authorized:
             raise Exception("UNAUTHORIZED REQUEST")
         _messages = []
-        messages = Messages.query.filter(Messages.device == self.__device, Messages.from_device == True).order_by(Messages.date)
-        for message in messages.all():
+        messages = Messages.query.filter(Messages.device == self.__device, Messages.from_device == True)
+        for message in messages.order_by(Messages.date).all():
             _messages.append({"mes": message.json, "date": format_date(message.date)})
         messages.delete()
         commit()    
