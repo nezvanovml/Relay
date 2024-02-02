@@ -69,7 +69,7 @@ class DeviceConnection:
         messages = Messages.query.filter(Messages.device == self.__device, Messages.from_device == True).order_by(Messages.date).all()
         for message in messages:
             _messages.append({"mes": message.json, "date": format_date(message.date)})
-            message.delete()
+        messages.delete()
         commit()    
         return _messages
     
