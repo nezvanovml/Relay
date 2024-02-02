@@ -77,10 +77,12 @@ class DeviceConnection:
         if not self.is_authorized:
             raise Exception("UNAUTHORIZED REQUEST")
         _statuses = []
+        last_date = None
         statuses = Statuses.query.filter(Statuses.device == self.__device)
         for status in statuses.order_by(Statuses.date).all():
+            last_date = status.date if not last_date else last_date
             _statuses.append({"status": status.json, "date": format_datetime(status.date)})
-        statuses.delete()
+        statuses.filter(Statuses.date < last_date).delete()
         commit()    
         return _statuses
     
