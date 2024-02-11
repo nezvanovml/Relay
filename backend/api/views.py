@@ -101,7 +101,7 @@ def api_server_command_post(unique_id, token):
         payload = request.get_json(force=True)
     except Exception as err:
         return make_response(jsonify({'errors': ['Incorrect JSON.']}), 400)
-    if not device.post_command_server(payload):
+    if not device.server_post_command(payload):
         return make_response(jsonify({"created": False}), 200)
     return make_response(jsonify({"created": True}), 200)
 
@@ -117,14 +117,14 @@ def api_server_status_get(unique_id, token):
     device = DeviceConnection()
     if not device.authorize(unique_id, token, False):
         return make_response(jsonify({'errors': ['Device not found.'], 'data': None}), 404)
-    return make_response(jsonify(device.get_statuses_server()), 200)
+    return make_response(jsonify(device.server_get_status()), 200)
 
 @api.route('/server/checkactivity/<string:unique_id>/<string:token>', methods=["GET"])
 def api_server_checkactivity_get(unique_id, token):
     device = DeviceConnection()
     if not device.authorize(unique_id, token, False):
         return make_response(jsonify({'errors': ['Device not found.'], 'data': None}), 404)
-    return make_response(jsonify({"active": device.get_activity_server()}), 200)
+    return make_response(jsonify({"active": device.server_get_activity()}), 200)
 
 @api.route('/server/checkauth/<string:unique_id>/<string:token>', methods=["GET"])
 def api_server_checkauth_get(unique_id, token):
@@ -248,19 +248,19 @@ def ws_device(ws):
         elif device.is_authorized:
             print("DEVICE", device.get_device_id(), device.is_authorized, received_data)
             device.update_last_connection()
-            _message = device.get_message_device()
+            _message = device.device_get_message()
             if _message:
                 ws.send(json.dumps({'mes': _message}))
 
             if payload:
                 if 'mes' in payload: # Обрабатываем сообщение
-                    device.post_message_device(payload.get('mes'))
+                    device.device_post_message(payload.get('mes'))
                 if 'system_info' in payload: # Обрабатываем системную информацию
-                    device.post_system_info(payload.get('system_info', {}))
+                    device.device_post_system_info(payload.get('system_info', {}))
                 if 'req' in payload: # Обрабатываем запрос данных
                     requested_data = payload.get('req')
                     if requested_data == 'fw': # Запрос версии прошивки
-                        _firmware = device.get_firmware_version()
+                        _firmware = device.device_get_firmware()
                         ws.send(json.dumps({'fw': _firmware}))
 
 

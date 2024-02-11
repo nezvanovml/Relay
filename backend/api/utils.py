@@ -38,7 +38,7 @@ class DeviceConnection:
         self.is_authorized = True
         return True
     
-    def get_message_device(self) :  
+    def device_get_message(self) :  
         if not self.is_authorized:
             raise Exception("UNAUTHORIZED REQUEST")
         _message = None
@@ -73,7 +73,7 @@ class DeviceConnection:
     #     commit()    
     #     return _messages
     
-    def get_statuses_server(self) :  
+    def server_get_status(self) :  
         if not self.is_authorized:
             raise Exception("UNAUTHORIZED REQUEST")
         _statuses = []
@@ -86,7 +86,7 @@ class DeviceConnection:
         commit()    
         return _statuses
     
-    def get_activity_server(self) :  
+    def server_get_activity(self) :  
         if not self.is_authorized:
             raise Exception("UNAUTHORIZED REQUEST")
         status = Statuses.query.filter(Statuses.device == self.__device).order_by(Statuses.date).first()
@@ -96,7 +96,7 @@ class DeviceConnection:
             return True
         return False
     
-    def post_message_device(self, message: dict) -> bool:  
+    def device_post_message(self, message: dict) -> bool:  
         if not self.is_authorized:
             raise Exception("UNAUTHORIZED REQUEST")
         message = Messages(from_device=True, device=self.__device, date=datetime.datetime.utcnow(), json=message)
@@ -104,7 +104,7 @@ class DeviceConnection:
             return False
         return True
     
-    def post_command_server(self, command: dict) -> bool:  
+    def server_post_command(self, command: dict) -> bool:  
         if not self.is_authorized:
             raise Exception("UNAUTHORIZED REQUEST")
         _command = Commands(from_device=False, device=self.__device, date=datetime.datetime.utcnow(), json=command)
@@ -112,7 +112,7 @@ class DeviceConnection:
             return False
         return True
     
-    def post_system_info(self, system_info: dict) -> bool:  
+    def device_post_system_info(self, system_info: dict) -> bool:  
         if not self.is_authorized:
             raise Exception("UNAUTHORIZED REQUEST")
         self.__device.system_info = system_info
@@ -125,7 +125,7 @@ class DeviceConnection:
             raise Exception("UNAUTHORIZED REQUEST")
         return self.__device.system_info
     
-    def get_firmware_version(self):  
+    def device_get_firmware(self):  
         if not self.is_authorized:
             raise Exception("UNAUTHORIZED REQUEST")
         _firmware = None
