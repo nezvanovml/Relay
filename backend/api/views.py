@@ -71,32 +71,39 @@ api = Blueprint('api', __name__)
 #         response['commands'] = device.get_messages_server()
 #     return make_response(jsonify({'errors': None, 'data': response}), 200)
 
-@api.route('/server/commands/<string:unique_id>/<string:token>', methods=["POST"])
-def api_server_post(unique_id, token):
-    device = DeviceConnection()
-    if not device.authorize(unique_id, token, False):
-        return make_response(jsonify({'errors': ['Device not found.']}), 404)
-    try:
-        payload = request.get_json(force=True)
-    except Exception as err:
-        return make_response(jsonify({'errors': ['Incorrect JSON.']}), 400)
+# @api.route('/server/commands/<string:unique_id>/<string:token>', methods=["POST"])
+# def api_server_post(unique_id, token):
+#     device = DeviceConnection()
+#     if not device.authorize(unique_id, token, False):
+#         return make_response(jsonify({'errors': ['Device not found.']}), 404)
+#     try:
+#         payload = request.get_json(force=True)
+#     except Exception as err:
+#         return make_response(jsonify({'errors': ['Incorrect JSON.']}), 400)
     
-    response = {}
+#     response = {}
     
-    if 'command' not in payload: # Обрабатываем команды
-        return make_response(jsonify({'errors': ['Incorrect JSON.']}), 400)
+#     if 'command' not in payload: # Обрабатываем команды
+#         return make_response(jsonify({'errors': ['Incorrect JSON.']}), 400)
     
-    if device.post_message_server(payload.get('command')):
-        return make_response(jsonify({}), 201)
-    else:
-        return make_response(jsonify({'errors': ['Error adding command.']}), 500)
+#     if device.post_message_server(payload.get('command')):
+#         return make_response(jsonify({}), 201)
+#     else:
+#         return make_response(jsonify({'errors': ['Error adding command.']}), 500)
 
 @api.route('/server/command/<string:unique_id>/<string:token>', methods=["POST"])
 def api_server_command_post(unique_id, token):
     device = DeviceConnection()
     if not device.authorize(unique_id, token, False):
         return make_response(jsonify({'errors': ['Device not found.'], 'data': None}), 404)
-    return make_response(jsonify([device.get_messages_server()]), 200)
+    
+    try:
+        payload = request.get_json(force=True)
+    except Exception as err:
+        return make_response(jsonify({'errors': ['Incorrect JSON.']}), 400)
+    if not device.post_command_server(payload):
+        return make_response(jsonify({"created": False}), 200)
+    return make_response(jsonify({"created": True}), 200)
 
 @api.route('/server/system_info/<string:unique_id>/<string:token>', methods=["GET"])
 def api_server_system_info_get(unique_id, token):

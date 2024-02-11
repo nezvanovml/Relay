@@ -97,7 +97,7 @@ class DeviceConnection:
     def post_command_server(self, command: dict) -> bool:  
         if not self.is_authorized:
             raise Exception("UNAUTHORIZED REQUEST")
-        _command = Comm(from_device=False, device=self.__device, date=datetime.datetime.utcnow(), json=message)
+        _command = Commands(from_device=False, device=self.__device, date=datetime.datetime.utcnow(), json=command)
         if not add_and_commit(_command):
             return False
         return True
