@@ -119,6 +119,13 @@ def api_server_status_get(unique_id, token):
         return make_response(jsonify({'errors': ['Device not found.'], 'data': None}), 404)
     return make_response(jsonify(device.get_statuses_server()), 200)
 
+@api.route('/server/checkactivity/<string:unique_id>/<string:token>', methods=["GET"])
+def api_server_checkactivity_get(unique_id, token):
+    device = DeviceConnection()
+    if not device.authorize(unique_id, token, False):
+        return make_response(jsonify({'errors': ['Device not found.'], 'data': None}), 404)
+    return make_response(jsonify({"active": device.get_activity_server()}), 200)
+
 @api.route('/server/checkauth/<string:unique_id>/<string:token>', methods=["GET"])
 def api_server_checkauth_get(unique_id, token):
     device = DeviceConnection()
