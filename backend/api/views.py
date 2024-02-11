@@ -91,8 +91,8 @@ def api_server_post(unique_id, token):
     else:
         return make_response(jsonify({'errors': ['Error adding command.']}), 500)
 
-@api.route('/server/commands/<string:unique_id>/<string:token>', methods=["GET"])
-def api_server_commands_get(unique_id, token):
+@api.route('/server/command/<string:unique_id>/<string:token>', methods=["POST"])
+def api_server_command_post(unique_id, token):
     device = DeviceConnection()
     if not device.authorize(unique_id, token, False):
         return make_response(jsonify({'errors': ['Device not found.'], 'data': None}), 404)

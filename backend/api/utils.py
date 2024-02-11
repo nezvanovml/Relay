@@ -1,6 +1,6 @@
 import datetime
 from backend.utils import commit, add_and_commit, format_date, format_datetime
-from .models import Devices, Messages, Firmwares, Statuses
+from .models import Devices, Messages, Firmwares, Statuses, Commands
 ALLOWED_EXTENSIONS = ['bin']
 
 def allowed_file(filename):
@@ -50,28 +50,28 @@ class DeviceConnection:
             commit()
         return _message
     
-    def get_message_server(self) :  
-        if not self.is_authorized:
-            raise Exception("UNAUTHORIZED REQUEST")
-        _message = None
-        message = Messages.query.filter(Messages.device == self.__device, Messages.from_device == True).order_by(Messages.date.desc()).first()
-        if message:
-            print(message.json)
-            _message = message.json
-            Messages.query.filter(Messages.device == self.__device, Messages.from_device == True, Messages.date <= message.date).delete()
-            commit()
-        return _message
+    # def get_message_server(self) :  
+    #     if not self.is_authorized:
+    #         raise Exception("UNAUTHORIZED REQUEST")
+    #     _message = None
+    #     message = Messages.query.filter(Messages.device == self.__device, Messages.from_device == True).order_by(Messages.date.desc()).first()
+    #     if message:
+    #         print(message.json)
+    #         _message = message.json
+    #         Messages.query.filter(Messages.device == self.__device, Messages.from_device == True, Messages.date <= message.date).delete()
+    #         commit()
+    #     return _message
     
-    def get_messages_server(self) :  
-        if not self.is_authorized:
-            raise Exception("UNAUTHORIZED REQUEST")
-        _messages = []
-        messages = Messages.query.filter(Messages.device == self.__device, Messages.from_device == True)
-        for message in messages.order_by(Messages.date).all():
-            _messages.append({"mes": message.json, "date": format_datetime(message.date)})
-        messages.delete()
-        commit()    
-        return _messages
+    # def get_messages_server(self) :  
+    #     if not self.is_authorized:
+    #         raise Exception("UNAUTHORIZED REQUEST")
+    #     _messages = []
+    #     messages = Messages.query.filter(Messages.device == self.__device, Messages.from_device == True)
+    #     for message in messages.order_by(Messages.date).all():
+    #         _messages.append({"mes": message.json, "date": format_datetime(message.date)})
+    #     messages.delete()
+    #     commit()    
+    #     return _messages
     
     def get_statuses_server(self) :  
         if not self.is_authorized:
@@ -94,11 +94,11 @@ class DeviceConnection:
             return False
         return True
     
-    def post_message_server(self, message: dict) -> bool:  
+    def post_command_server(self, command: dict) -> bool:  
         if not self.is_authorized:
             raise Exception("UNAUTHORIZED REQUEST")
-        message = Messages(from_device=False, device=self.__device, date=datetime.datetime.utcnow(), json=message)
-        if not add_and_commit(message):
+        _command = Comm(from_device=False, device=self.__device, date=datetime.datetime.utcnow(), json=message)
+        if not add_and_commit(_command):
             return False
         return True
     
