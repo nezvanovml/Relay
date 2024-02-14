@@ -38,17 +38,17 @@ class DeviceConnection:
         self.is_authorized = True
         return True
     
-    def device_get_message(self) :  
+    def device_get_command(self) :  
         if not self.is_authorized:
             raise Exception("UNAUTHORIZED REQUEST")
-        _message = None
-        message = Messages.query.filter(Messages.device == self.__device, Messages.from_device == False).order_by(Messages.date.desc()).first()
-        if message:
-            print(message.json)
-            _message = message.json
-            Messages.query.filter(Messages.device == self.__device, Messages.from_device == False, Messages.date <= message.date).delete()
+        _command = None
+        command = Commands.query.filter(Commands.device == self.__device, Commands.from_device == False).order_by(Commands.date.desc()).first()
+        if command:
+            print(command.json)
+            _command = command.json
+            Commands.query.filter(Commands.device == self.__device, Commands.from_device == False, Commands.date <= command.date).delete()
             commit()
-        return _message
+        return _command
     
     # def get_message_server(self) :  
     #     if not self.is_authorized:
@@ -96,11 +96,11 @@ class DeviceConnection:
             return True
         return False
     
-    def device_post_message(self, message: dict) -> bool:  
+    def device_post_command(self, command_json: dict) -> bool:  
         if not self.is_authorized:
             raise Exception("UNAUTHORIZED REQUEST")
-        message = Messages(from_device=True, device=self.__device, date=datetime.datetime.utcnow(), json=message)
-        if not add_and_commit(message):
+        command = Commands(from_device=True, device=self.__device, date=datetime.datetime.utcnow(), json=command_json)
+        if not add_and_commit(command):
             return False
         return True
     
