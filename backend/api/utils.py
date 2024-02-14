@@ -50,6 +50,14 @@ class DeviceConnection:
             commit()
         return _command
     
+    def device_post_status(self, status_json: dict) -> bool:  
+        if not self.is_authorized:
+            raise Exception("UNAUTHORIZED REQUEST")
+        status = Statuses(device=self.__device, date=datetime.datetime.utcnow(), json=status_json)
+        if not add_and_commit(status):
+            return False
+        return True
+    
     # def get_message_server(self) :  
     #     if not self.is_authorized:
     #         raise Exception("UNAUTHORIZED REQUEST")

@@ -256,6 +256,8 @@ def ws_device(ws):
             if payload:
                 if 'system_info' in payload: # Обрабатываем системную информацию
                     device.device_post_system_info(payload.get('system_info', {}))
+                if 'status' in payload: # Обрабатываем статус информацию
+                    device.device_post_status(payload.get('status', {}))
                 if 'req' in payload: # Обрабатываем запрос данных
                     requested_data = payload.get('req')
                     if requested_data == 'fw': # Запрос версии прошивки
