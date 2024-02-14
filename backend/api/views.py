@@ -243,9 +243,9 @@ def ws_device(ws):
             unauthorized_requests += 1
         elif not device.is_authorized and payload:
             if device.authorize(payload.get("id", None), payload.get("token", None)):
-                ws.send(json.dumps({"info": "AUTHORIZED"}))
-                ws.send(json.dumps({"req": "SYSINFO"}))
-                ws.send(json.dumps({"req": "STATUS"}))
+                ws.send(json.dumps({"info": "authorized"}))
+                ws.send(json.dumps({"req": "system_info"}))
+                ws.send(json.dumps({"req": "status"}))
         elif device.is_authorized:
             print("DEVICE", device.get_device_id(), device.is_authorized, received_data)
             device.update_last_connection()
