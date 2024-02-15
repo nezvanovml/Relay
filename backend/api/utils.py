@@ -97,7 +97,7 @@ class DeviceConnection:
     def server_get_activity(self) :  
         if not self.is_authorized:
             raise Exception("UNAUTHORIZED REQUEST")
-        status = Statuses.query.filter(Statuses.device == self.__device).order_by(Statuses.date).first()
+        status = Statuses.query.filter(Statuses.device == self.__device).order_by(Statuses.date.desc()).first()
         if not status:
             return False
         if status.date > datetime.datetime.utcnow() - datetime.timedelta(seconds=30):

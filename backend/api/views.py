@@ -183,47 +183,6 @@ def api_firmware_put(unique_id, token):
             return send_file(path, as_attachment=False)
         
 
-# @socket.route('/api/server')
-# def ws_server(ws):
-#     device = DeviceConnection()
-#     unauthorized_requests = 0
-#     while True:
-#         received_data = ws.receive(timeout=1)
-#         payload = None
-#         if received_data: 
-#             try:
-#                 payload = json.loads(received_data)
-#             except Exception:
-#                 ws.send(json.dumps({"err": "BAD_JSON"}))
-#                 continue
-#         # Запрашиваем авторизацию если она не пройдена
-#         if not device.is_authorized and not payload:
-#             print("SERVER", None, device.is_authorized, payload)
-#             unauthorized_requests += 1
-#         elif not device.is_authorized and payload:
-#             if device.authorize(payload.get("id", None), payload.get("token", None), False):
-#                 ws.send(json.dumps({"info": "AUTHORIZED"}))
-#         elif device.is_authorized:
-#             print("SERVER", device.get_device_id(), device.is_authorized, received_data)
-#             _message = device.get_message_server()
-#             if _message:
-#                 ws.send(json.dumps({'mes': _message}))
-
-#             if payload:
-#                 if 'mes' in payload: # Обрабатываем сообщение
-#                     device.post_message_server(payload.get('mes'))
-#                 if 'req' in payload: # Обрабатываем запрос данных
-#                     requested_data = payload.get('req')
-#                     if requested_data == 'SYSINFO': # Запрос версии прошивки
-#                         ws.send(json.dumps({'system_info': device.get_system_info()}))
-
-
-#         # Закрываем сокет если за 5 тактов не проведена авторизация
-#         if unauthorized_requests >= 5:
-#             ws.close()
-
-
-
 @socket.route('/ws/device/v1')
 def ws_device(ws):
     device = DeviceConnection()
