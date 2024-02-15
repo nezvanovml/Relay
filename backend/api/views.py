@@ -187,6 +187,7 @@ def api_firmware_put(unique_id, token):
 def ws_device(ws):
     device = DeviceConnection()
     unauthorized_requests = 0
+    steps_from_status = 0
     while True:
         received_data = ws.receive(timeout=1)
         payload = None
@@ -217,13 +218,17 @@ def ws_device(ws):
                     device.device_post_system_info(payload.get('system_info', {}))
                 if 'status' in payload: # Обрабатываем статус информацию
                     device.device_post_status(payload.get('status', {}))
+                    steps_from_status = 0
                 if 'req' in payload: # Обрабатываем запрос данных
                     requested_data = payload.get('req')
                     if requested_data == 'fw': # Запрос версии прошивки
                         _firmware = device.device_get_firmware()
                         ws.send(json.dumps({'fw': _firmware}))
 
+        steps_from_status += 1
 
+        if steps_from_status % 30 == 0:
+            ws.send(json.dumps({"req": "status"}))
         # Закрываем сокет если за 5 тактов не проведена авторизация
         if unauthorized_requests >= 5:
             ws.close()
