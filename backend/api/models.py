@@ -11,7 +11,6 @@ class Devices(db.Model):
     unique_id = db.Column(db.String(50), unique=True)
     token = db.Column(db.String(50), nullable=False)
     last_connection = db.Column(db.DateTime, default=datetime.datetime.utcnow(), nullable=False)
-    system_info = db.Column(JSON, nullable=True)
 
     def __repr__(self):
         return 'Devices %r' % self.id
