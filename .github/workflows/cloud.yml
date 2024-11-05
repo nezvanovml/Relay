@@ -1,0 +1,30 @@
+# This workflow will install a prebuilt Ruby version, install dependencies, and
+# run tests and linters. Then it pulls new features from my repo and
+# rebuild containers on remote server through ssh.
+
+name: "Deploy to cloud server"
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run command on remote server
+        uses: D3rHase/ssh-command-action@v0.2.2
+        with:
+          host: ${{secrets.SSH_HOST_CLOUD}}
+          user: ${{secrets.SSH_USER_CLOUD}}
+          port: 55255
+          private_key: ${{secrets.SSH_PRIVATE_KEY_CLOUD}}
+          command: |
+            cd ${{ secrets.PROJECT_FOLDER }};
+            git checkout main;
+            git pull origin;
+            export SECRET_KEY="${{ secrets.SECRET_KEY }}";
+            export POSTGRES_PASSWORD="${{ secrets.POSTGRES_PASSWORD }}";
+            docker build -f dockerfile-back -t esp_relay_back_backend .;
+            docker compose -f docker-compose-prod.yml up --remove-orphans -d;
+            sleep 10;
+            docker exec esp_relay_back_app python manage.py db_upgrade;
