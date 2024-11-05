@@ -79,6 +79,7 @@ def api_server_system_info_get(unique_id, token):
                 response_uuid = _data.get("uuid", None)
                 if response_uuid == request_uuid:
                     return make_response(jsonify(_data.get("system_info", {})), 200)
+        time.sleep(0.5)
 
     return make_response(jsonify({"errors": ["No answer from esp"]}), 503)
 
