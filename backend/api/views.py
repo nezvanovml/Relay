@@ -53,6 +53,7 @@ def api_server_command_post(unique_id, token):
                 response_uuid = _data.get("uuid", None)
                 if response_uuid == request_uuid:
                     return make_response(jsonify({"command": _data.get("command", False)}), 200)
+        time.sleep(0.5)
 
     return make_response(jsonify({"errors": ["No answer from esp"]}), 503)
 
@@ -105,6 +106,7 @@ def api_server_status_get(unique_id, token):
                 response_uuid = _data.get("uuid", None)
                 if response_uuid == request_uuid:
                     return make_response(jsonify(_data.get("status", {})), 200)
+        time.sleep(0.5)
 
     return make_response(jsonify({"errors": ["No answer from esp"]}), 503)
 
