@@ -16,7 +16,7 @@ jobs:
         with:
           host: ${{secrets.SSH_HOST_CLOUD}}
           user: ${{secrets.SSH_USER_CLOUD}}
-          port: 55255
+          port: 22
           private_key: ${{secrets.SSH_PRIVATE_KEY_CLOUD}}
           command: |
             cd ${{ secrets.PROJECT_FOLDER }};
