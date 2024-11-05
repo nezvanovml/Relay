@@ -19,7 +19,7 @@ jobs:
           port: 22
           private_key: ${{secrets.SSH_PRIVATE_KEY_CLOUD}}
           command: |
-            cd ${{ secrets.PROJECT_FOLDER }};
+            cd ${{ secrets.PROJECT_FOLDER_CLOUD }};
             git checkout main;
             git pull origin;
             export SECRET_KEY="${{ secrets.SECRET_KEY }}";
