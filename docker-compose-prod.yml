@@ -35,7 +35,12 @@ services:
       - web
       - internal
 
-
+  esp_relay_back_redis:
+    container_name: esp_relay_back_redis
+    image: redis:6.2
+    restart: unless-stopped
+    networks:
+      - internal
 
   esp_relay_back_app:
     container_name: esp_relay_back_app

@@ -2,9 +2,8 @@ import os
 from flask import Flask, jsonify, make_response
 import yaml
 import backend as app_root
-from backend.extensions import db, migrate, spec, socket
+from backend.extensions import db, migrate, socket
 from logging.config import dictConfig
-from flask_swagger_ui import get_swaggerui_blueprint
 
 APP_ROOT_FOLDER = os.path.abspath(os.path.dirname(app_root.__file__))
 
@@ -64,25 +63,5 @@ def create_app(config='master'):
 
     with app.app_context():
         import backend.middleware
-
-    # Adding swagger interface for docs.
-    swaggerui_blueprint = get_swaggerui_blueprint(
-        '/docs',  # Swagger UI static files will be mapped to '{SWAGGER_URL}/dist/'
-        '/spec',
-        config={  # Swagger UI config overrides
-            'app_name': "Ваш инвестор: взыскание"
-        }
-    )
-    app.register_blueprint(swaggerui_blueprint)
-
-    # Initializing specs.
-    spec.components.security_scheme("ApiKeyAuth", {"type": "apiKey", "in": "header", "name": "Authorization"})
-
-    @app.route("/spec")
-    def spec_get():
-        for rule in app.url_map.iter_rules():
-            if rule.endpoint != 'static':
-                spec.path(view=app.view_functions[rule.endpoint])
-        return jsonify(spec.to_dict())
 
     return app

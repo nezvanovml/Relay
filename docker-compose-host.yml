@@ -23,5 +23,12 @@ services:
     environment:
       ADMINER_DEFAULT_SERVER: esp_relay_back_postgres_db
 
+  esp_relay_back_redis:
+    container_name: esp_relay_back_redis
+    image: redis:6.2
+    restart: unless-stopped
+    ports:
+      - 6379:6379
+
 volumes:
   esp_relay_back_volume_postgres_db:
