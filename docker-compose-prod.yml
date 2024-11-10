@@ -62,7 +62,7 @@ services:
       - "traefik.http.services.esp_relay.loadbalancer.server.port=80"
       - "traefik.http.routers.esp_relay.tls=true"
       - "traefik.http.routers.esp_relay.tls.certresolver=letsEncrypt"
-      - "traefik.http.routers.esp_relay.rule=Host(`sh-relay.neztech.ru`)"
+      - "traefik.http.routers.esp_relay.rule=Host(`relay.smarthome-tech.ru`)"
     networks:
       - web
       - internal
