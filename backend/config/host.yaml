@@ -1,7 +1,7 @@
 postgres_host: localhost
 postgres_port: 5432
-postgres_user: esp_relay_back
-postgres_database: esp_relay_back
+postgres_user: relay_back
+postgres_database: relay_back
 redis_host: localhost
 redis_port: 6379
 firmware_root: files

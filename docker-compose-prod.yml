@@ -7,66 +7,66 @@ networks:
     external: false
 
 services:
-  esp_relay_back_postgres_db:
-    container_name: esp_relay_back_postgres_db
+  relay_back_postgres_db:
+    container_name: relay_back_postgres_db
     image: postgres:14.5
     restart: always
     environment:
       POSTGRES_PASSWORD:
-      POSTGRES_USER: esp_relay_back
-      POSTGRES_DB: esp_relay_back
+      POSTGRES_USER: relay_back
+      POSTGRES_DB: relay_back
     volumes:
-      - esp_relay_back_volume_postgres_db:/var/lib/postgresql/data
+      - relay_back_volume_postgres_db:/var/lib/postgresql/data
     ports:
       - 5432:5432
     networks:
       - internal
 
 
-  esp_relay_back_adminer:
-    container_name: esp_relay_back_bot_adminer
+  relay_back_adminer:
+    container_name: relay_back_bot_adminer
     image: adminer:4.8.1
     restart: always
     ports:
       - 8890:8080
     environment:
-      ADMINER_DEFAULT_SERVER: esp_relay_back_postgres_db
+      ADMINER_DEFAULT_SERVER: relay_back_postgres_db
     networks:
       - web
       - internal
 
-  esp_relay_back_redis:
-    container_name: esp_relay_back_redis
+  relay_back_redis:
+    container_name: relay_back_redis
     image: redis:6.2
     restart: unless-stopped
     networks:
       - internal
 
-  esp_relay_back_app:
-    container_name: esp_relay_back_app
-    image: esp_relay_back_backend:latest
+  relay_back_app:
+    container_name: relay_back_app
+    image: relay_back_backend:latest
     restart: always
     command: gunicorn --workers 4 --threads 100 --preload -b 0.0.0.0:80 'wsgi:app'
     depends_on:
-      - esp_relay_back_postgres_db
+      - relay_back_postgres_db
     environment:
       CONFIG: master
       SECRET_KEY:
       POSTGRES_PASSWORD:
     volumes:
-      - esp_relay_back_volume_firmwares:/srv/firmwares
+      - relay_back_volume_firmwares:/srv/firmwares
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.esp_relay.entrypoints=https"
+      - "traefik.http.routers.relay.entrypoints=https"
       - "traefik.docker.network=web"
-      - "traefik.http.services.esp_relay.loadbalancer.server.port=80"
-      - "traefik.http.routers.esp_relay.tls=true"
-      - "traefik.http.routers.esp_relay.tls.certresolver=letsEncrypt"
-      - "traefik.http.routers.esp_relay.rule=Host(`relay.smarthome-tech.ru`, `sh-relay.neztech.ru`)"
+      - "traefik.http.services.relay.loadbalancer.server.port=80"
+      - "traefik.http.routers.relay.tls=true"
+      - "traefik.http.routers.relay.tls.certresolver=letsEncrypt"
+      - "traefik.http.routers.relay.rule=Host(`relay.smarthome-tech.ru`, `sh-relay.neztech.ru`)"
     networks:
       - web
       - internal
 
 volumes:
-  esp_relay_back_volume_postgres_db:
-  esp_relay_back_volume_firmwares:
+  relay_back_volume_postgres_db:
+  relay_back_volume_firmwares:

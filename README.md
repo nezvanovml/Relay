@@ -1,1 +1,1 @@
-# API-relay
+# Relay for smarthome-devices
