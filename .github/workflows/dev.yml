@@ -20,7 +20,7 @@ jobs:
           private_key: ${{secrets.SSH_PRIVATE_KEY}}
           command: |
             cd ${{ secrets.PROJECT_FOLDER }};
-            git checkout main;
+            git checkout dev;
             git pull origin;
             export SECRET_KEY="${{ secrets.SECRET_KEY }}";
             export POSTGRES_PASSWORD="${{ secrets.POSTGRES_PASSWORD }}";
