@@ -27,4 +27,4 @@ jobs:
             docker build -f dockerfile-back -t relay_back_backend .;
             docker compose -f docker-compose-dev.yml up --remove-orphans -d;
             sleep 10;
-            docker exec relay_back_app python manage.py db_upgrade;
+            docker exec relay_back_app python manage.py db_upgrade -c dev;

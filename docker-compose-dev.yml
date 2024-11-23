@@ -50,7 +50,7 @@ services:
     depends_on:
       - relay_back_postgres_db
     environment:
-      CONFIG: master
+      CONFIG: dev
       SECRET_KEY:
       POSTGRES_PASSWORD:
     volumes:
