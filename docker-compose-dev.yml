@@ -62,7 +62,7 @@ services:
       - "traefik.http.services.relay.loadbalancer.server.port=80"
       - "traefik.http.routers.relay.tls=true"
       - "traefik.http.routers.relay.tls.certresolver=letsEncrypt"
-      - "traefik.http.routers.relay.rule=Host(`relay.smarthome-tech.ru`)"
+      - "traefik.http.routers.relay.rule=Host(`dev.relay.smarthome-tech.ru`)"
     networks:
       - web
       - internal

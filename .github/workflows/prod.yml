@@ -2,7 +2,7 @@
 # run tests and linters. Then it pulls new features from my repo and
 # rebuild containers on remote server through ssh.
 
-name: "Deploy to home server"
+name: "Deploy to prod server"
 on:
   push:
     branches: ["main"]
@@ -14,12 +14,12 @@ jobs:
       - name: Run command on remote server
         uses: D3rHase/ssh-command-action@v0.2.2
         with:
-          host: ${{secrets.SSH_HOST}}
-          user: ${{secrets.SSH_USER}}
-          port: 55255
-          private_key: ${{secrets.SSH_PRIVATE_KEY}}
+          host: ${{secrets.SSH_HOST_CLOUD}}
+          user: ${{secrets.SSH_USER_CLOUD}}
+          port: 22
+          private_key: ${{secrets.SSH_PRIVATE_KEY_CLOUD}}
           command: |
-            cd ${{ secrets.PROJECT_FOLDER }};
+            cd ${{ secrets.PROJECT_FOLDER_CLOUD }};
             git checkout main;
             git pull origin;
             export SECRET_KEY="${{ secrets.SECRET_KEY }}";

@@ -2,10 +2,10 @@
 # run tests and linters. Then it pulls new features from my repo and
 # rebuild containers on remote server through ssh.
 
-name: "Deploy to cloud server"
+name: "Deploy to dev server"
 on:
   push:
-    branches: ["main"]
+    branches: ["dev"]
 
 jobs:
   deploy:
@@ -14,17 +14,17 @@ jobs:
       - name: Run command on remote server
         uses: D3rHase/ssh-command-action@v0.2.2
         with:
-          host: ${{secrets.SSH_HOST_CLOUD}}
-          user: ${{secrets.SSH_USER_CLOUD}}
-          port: 22
-          private_key: ${{secrets.SSH_PRIVATE_KEY_CLOUD}}
+          host: ${{secrets.SSH_HOST}}
+          user: ${{secrets.SSH_USER}}
+          port: 55255
+          private_key: ${{secrets.SSH_PRIVATE_KEY}}
           command: |
-            cd ${{ secrets.PROJECT_FOLDER_CLOUD }};
+            cd ${{ secrets.PROJECT_FOLDER }};
             git checkout main;
             git pull origin;
             export SECRET_KEY="${{ secrets.SECRET_KEY }}";
             export POSTGRES_PASSWORD="${{ secrets.POSTGRES_PASSWORD }}";
             docker build -f dockerfile-back -t relay_back_backend .;
-            docker compose -f docker-compose-prod.yml up --remove-orphans -d;
+            docker compose -f docker-compose-dev.yml up --remove-orphans -d;
             sleep 10;
             docker exec relay_back_app python manage.py db_upgrade;
