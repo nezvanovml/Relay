@@ -37,6 +37,8 @@ def create_app(config='master'):
     # here must be imported & declared all blueprints
     from backend.api.views import api
     app.register_blueprint(api, url_prefix='/api')
+    from backend.ui.views import ui
+    app.register_blueprint(ui, url_prefix='/')
 
     app.config['env'] = config
     app.logger.info(f"Loading setting from: {config}")
