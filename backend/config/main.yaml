@@ -1,0 +1,7 @@
+postgres_host: relay_back_postgres_db
+postgres_port: 5432
+postgres_user: relay_back
+postgres_database: relay_back
+redis_host: relay_back_redis
+redis_port: 6379
+firmware_root: /srv/firmwares

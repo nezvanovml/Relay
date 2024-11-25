@@ -14,7 +14,7 @@ services:
     ports:
       - 5432:5432
 
- relay_back_bot_adminer:
+  relay_back_bot_adminer:
     container_name: relay_back_bot_adminer
     image: adminer:4.8.1
     restart: always
