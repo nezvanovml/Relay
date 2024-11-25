@@ -44,6 +44,22 @@ def ui_system_info_get():
         context["device"]["found"] = True
     return render_template('system_info.html', context=context)
 
+@ui.route('/status', methods=["GET"])
+def ui_status_get():
+    unique_id = request.args.get("unique_id", "")
+    token = request.args.get("token", "")
+    context = {"form": {"unique_id": unique_id, "token": token}, "device": {"found": False}}
+    if len(token) and len(unique_id):
+        device = Devices.query.filter(Devices.unique_id == unique_id, Devices.token == token).first()
+    else:
+        device = None
+
+    if not device:
+        flash("Device not found. Check your Unique ID/Token", "danger")
+    else:
+        context["device"]["found"] = True
+    return render_template('status.html', context=context)
+
 
 @ui.route('/firmware', methods=["GET", "POST"])
 def ui_firmware_get():

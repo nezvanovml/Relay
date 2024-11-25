@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {# переопределяем блок `title` базового шаблона #}
-{% block title %}System info{% endblock %}
+{% block title %}Status{% endblock %}
 {% block style %}
 {% endblock %}
 
@@ -18,7 +18,7 @@ $(document).ready(() => {
 {% block content %}
 
 <div class="container px-4 py-3">
-    <h1 class="display-1">System info</h1>
+    <h1 class="display-1">Status</h1>
     <div class="divider"></div>
     <form class="row g-3" method="get" enctype="multipart/form-data">
 
@@ -55,7 +55,7 @@ $(document).ready(() => {
 
     <div class="embed-responsive embed-responsive-16by9">
         <iframe id="device_data" class="embed-responsive-item"
-                src="/api/system_info/{{ context.form.unique_id }}/{{ context.form.token }}"
+                src="/api/status/{{ context.form.unique_id }}/{{ context.form.token }}"
                 allowfullscreen="" data-loaded="false" width="100%"></iframe>
     </div>
 </div>
