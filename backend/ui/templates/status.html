@@ -6,11 +6,16 @@
 
 {% block script %}
 $(document).ready(() => {
-  var iframeHead = $('#device_data').contents().find('head')
-  iframeHead.append('<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">')
-  var iframeBody = $('#device_data').contents().find('body')
-  // inject loading spinner
-  iframeBody.append('<div class="d-flex justify-content-center"><div class="spinner-grow text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>')
+var iframeHead = $('#device_data').contents().find('head')
+iframeHead.append('
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">')
+var iframeBody = $('#device_data').contents().find('body')
+// inject loading spinner
+iframeBody.append('
+<div class="d-flex justify-content-center">
+    <div class="spinner-grow text-primary" role="status"><span class="visually-hidden">Loading...</span></div>
+</div>')
 })
 {% endblock %}
 
@@ -56,9 +61,18 @@ $(document).ready(() => {
     <div class="embed-responsive embed-responsive-16by9">
         <iframe id="device_data" class="embed-responsive-item"
                 src="/api/status/{{ context.form.unique_id }}/{{ context.form.token }}"
-                allowfullscreen="" data-loaded="false" width="100%"></iframe>
+                allowfullscreen="" data-loaded="false" width="100%" height="500"></iframe>
     </div>
 </div>
+{% else %}
+<div class="container px-4 py-3">
+    <div class="alert alert-primary" role="alert">
+        You can watch info for <a
+            href="?unique_id=d7bf47c2a2fc11353eb29e5e233407b0acec48f6&token=54493f9fa6f66ed1fb993919ad79df52c5b1e379">example
+        device</a>
+    </div>
+</div>
+
 {% endif %}
 
 
