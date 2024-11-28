@@ -55,7 +55,7 @@ def api_server_command_post(unique_id, token):
                     return make_response(jsonify({"command": _data.get("command", False)}), 200)
         time.sleep(0.5)
 
-    return make_response(jsonify({"errors": ["No answer from esp"]}), 503)
+    return make_response(jsonify({"errors": ["No answer from device"]}), 503)
 
 @api.route('/system_info/<string:unique_id>/<string:token>', methods=["GET"])
 def api_server_system_info_get(unique_id, token):
@@ -82,7 +82,7 @@ def api_server_system_info_get(unique_id, token):
                     return make_response(jsonify(_data.get("system_info", {})), 200)
         time.sleep(0.5)
 
-    return make_response(jsonify({"errors": ["No answer from esp"]}), 503)
+    return make_response(jsonify({"errors": ["No answer from device"]}), 503)
 
 @api.route('/status/<string:unique_id>/<string:token>', methods=["GET"])
 def api_server_status_get(unique_id, token):
@@ -108,7 +108,7 @@ def api_server_status_get(unique_id, token):
                     return make_response(jsonify(_data.get("status", {})), 200)
         time.sleep(0.5)
 
-    return make_response(jsonify({"errors": ["No answer from esp"]}), 503)
+    return make_response(jsonify({"errors": ["No answer from device"]}), 503)
 
 @api.route('/firmware/<string:unique_id>/<string:token>', methods=["POST", "GET"])
 def api_firmware_put(unique_id, token):
