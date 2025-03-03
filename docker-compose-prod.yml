@@ -17,22 +17,7 @@ services:
       POSTGRES_DB: relay_back
     volumes:
       - relay_back_volume_postgres_db:/var/lib/postgresql/data
-    ports:
-      - 5432:5432
     networks:
-      - internal
-
-
-  relay_back_adminer:
-    container_name: relay_back_bot_adminer
-    image: adminer:4.8.1
-    restart: always
-    ports:
-      - 8890:8080
-    environment:
-      ADMINER_DEFAULT_SERVER: relay_back_postgres_db
-    networks:
-      - web
       - internal
 
   relay_back_redis:
