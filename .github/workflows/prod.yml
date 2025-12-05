@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Run command on remote server
-        uses: D3rHase/ssh-command-action@v0.2.2
+        uses: D3rHase/ssh-command-action@latest
         with:
           host: ${{secrets.SSH_HOST_CLOUD}}
           user: ${{secrets.SSH_USER_CLOUD}}
